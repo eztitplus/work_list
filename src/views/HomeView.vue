@@ -80,6 +80,7 @@
     </div>
     <div class="p-4 rounded-xl bg-white shadow-lg" style="height: calc(100vh - 265px)">
       <el-table :data="tables" class="w-full" :height="`calc(100vh - 290px)`">
+        <el-table-column sortable fixed type="index" label="序" width="50" align="center"></el-table-column>
         <el-table-column sortable fixed prop="user" label="姓名" width="100" align="center">
           <!--<el-table-column prop="user" width="150" align="center">
             <template #header>
@@ -88,6 +89,9 @@
               </el-select>
             </template>
           </el-table-column>-->
+          <template #default="scope">
+            <span v-html="showDate(scope.row.user)"></span>
+          </template>
         </el-table-column>
         <el-table-column sortable fixed prop="project" label="專案名稱" width="150" align="center">
           <!--<el-table-column prop="project" width="150" align="center">
@@ -95,6 +99,9 @@
               <el-input placeholder="關鍵字" v-model="search.project"></el-input>
             </template>
           </el-table-column>-->
+          <template #default="scope">
+            <span v-html="showDate(scope.row.project)"></span>
+          </template>
         </el-table-column>
         <el-table-column sortable prop="subitems" label="子項目" width="150" align="center">
           <!--<el-table-column prop="subitems" width="150" align="center">
@@ -102,6 +109,9 @@
               <el-input placeholder="關鍵字" v-model="search.subitems"></el-input>
             </template>
           </el-table-column>-->
+          <template #default="scope">
+            <span v-html="showDate(scope.row.subitems)"></span>
+          </template>
         </el-table-column>
         <el-table-column sortable prop="commit" label="說明" width="250" align="left">
           <!--<el-table-column prop="commit" width="250" align="left">
@@ -109,6 +119,9 @@
               <el-input placeholder="關鍵字" v-model="search.commit"></el-input>
             </template>
           </el-table-column>-->
+          <template #default="scope">
+            <span v-html="showDate(scope.row.commit)"></span>
+          </template>
         </el-table-column>
         <el-table-column sortable prop="type" label="類型" width="150" align="center">
           <!--<el-table-column prop="type" width="150" align="center">
@@ -118,6 +131,9 @@
               </el-select>
             </template>
           </el-table-column>-->
+          <template #default="scope">
+            <span v-html="showDate(scope.row.type)"></span>
+          </template>
         </el-table-column>
         <el-table-column sortable prop="bug_number" label="禪道單號" width="150" align="center">
           <!--<el-table-column prop="bug_number" width="150" align="center">
@@ -128,6 +144,9 @@
               <a-button type="text" @click="goPage(scope.$index, scope.row)">{{ scope.row.bug_number }}</a-button>
             </template>
           </el-table-column>-->
+          <template #default="scope">
+            <a-button type="text" @click="goPage(scope.$index, scope.row)" v-html="showDate(scope.row.bug_number)"></a-button>
+          </template>
         </el-table-column>
         <el-table-column sortable prop="status" label="執行狀態" width="150" align="center">
           <!--<el-table-column prop="status" width="150" align="center">
@@ -144,10 +163,10 @@
             </template>
           </el-table-column>-->
           <template #default="scope">
-            <a-tag v-if="scope.row.status === '已完成'" color="blue">{{ scope.row.status }}</a-tag>
-            <a-tag v-if="scope.row.status === '進行中'" color="green">{{ scope.row.status }}</a-tag>
-            <a-tag v-if="scope.row.status === '未開始'" color="red">{{ scope.row.status }}</a-tag>
-            <a-tag v-if="scope.row.status === '暫停'" color="purple">{{ scope.row.status }}</a-tag>
+            <a-tag v-if="scope.row.status === '已完成'" color="blue" v-html="showDate(scope.row.status)"></a-tag>
+            <a-tag v-if="scope.row.status === '進行中'" color="green" v-html="showDate(scope.row.status)"></a-tag>
+            <a-tag v-if="scope.row.status === '未開始'" color="red" v-html="showDate(scope.row.status)"></a-tag>
+            <a-tag v-if="scope.row.status === '暫停'" color="purple" v-html="showDate(scope.row.status)"></a-tag>
           </template>
         </el-table-column>
         <el-table-column sortable prop="assign_time" label="指派日期" width="150" align="center">
@@ -157,6 +176,9 @@
               &lt;!&ndash;<a-range-picker @change="onChange" @select="onSelect" style="width: 220px" />&ndash;&gt;
             </template>
           </el-table-column>-->
+          <template #default="scope">
+            <span v-html="showDate(scope.row.assign_time)"></span>
+          </template>
         </el-table-column>
         <el-table-column sortable prop="start_time" label="開始日期" width="150" align="center">
           <!--<el-table-column prop="start_time" width="280" align="center">
@@ -164,6 +186,9 @@
               <el-date-picker v-model="search.start_time" class="w-[250px]" type="daterange" range-separator="到" start-placeholder="開始日期" end-placeholder="結束日期" />
             </template>
           </el-table-column>-->
+          <template #default="scope">
+            <span v-html="showDate(scope.row.start_time)"></span>
+          </template>
         </el-table-column>
         <el-table-column sortable prop="end_time" label="預計完成日期" width="150" align="center">
           <!--<el-table-column prop="end_time" width="280" align="center">
@@ -171,6 +196,9 @@
               <el-date-picker v-model="search.end_time" class="w-[250px]" type="daterange" range-separator="到" start-placeholder="開始日期" end-placeholder="結束日期" />
             </template>
           </el-table-column>-->
+          <template #default="scope">
+            <span v-html="showDate(scope.row.end_time)"></span>
+          </template>
         </el-table-column>
         <el-table-column sortable prop="reality_end_time" label="實際完成日期" width="150" align="center">
           <!--<el-table-column prop="reality_end_time" width="280" align="center">
@@ -182,6 +210,14 @@
               <p v-else>{{ scope.row.reality_end_time }}</p>
             </template>
           </el-table-column>-->
+          <template #default="scope">
+            <span v-html="showDate(scope.row.reality_end_time)"></span>
+          </template>
+        </el-table-column>
+        <el-table-column sortable prop="versions" label="版本" width="100" align="center">
+          <template #default="scope">
+            <span v-html="showDate(scope.row.versions)"></span>
+          </template>
         </el-table-column>
         <el-table-column sortable prop="days" label="執行天數" width="150" align="center" />
         <!--<el-table-column sortable prop="updated_at" label="最後編輯時間" width="200" align="center">
@@ -258,6 +294,9 @@
             <a-date-picker v-model="editForm.reality_end_time" placeholder="請選擇時間" />
             <p>共{{ editForm.days }}天</p>
           </div>-->
+        </a-form-item>
+        <a-form-item tooltip="請輸入版本號碼" label="版本號碼">
+          <a-input v-model="editForm.versions" placeholder="請輸入內容" />
         </a-form-item>
         <div class="h-[32px] flex mb-4">
           <p class="w-[102px] text-right mr-[16px] text-[#415969]">執行天數</p>
@@ -451,6 +490,7 @@ export default {
         reality_end_time: "",
         days: "0",
         commit: "",
+        versions: "",
         created_at: "",
         updated_at: "",
       };
@@ -481,11 +521,12 @@ export default {
           reality_end_time: this.editForm.reality_end_time,
           days: this.editForm.days,
           commit: this.editForm.commit,
+          versions: this.editForm.versions,
           created_at: formattedDate,
           updated_at: formattedDate,
         };
         axios
-          .get("https://script.google.com/macros/s/AKfycbzmf2_Tay7hdJKGJLJ9Tuk5eoZ2guseoKrEXNe_FYWlqqhB66OiE_6IVWiFi28HuI9a/exec", {
+          .get("https://script.google.com/macros/s/AKfycbwrlrukf9c944pjr7eaCNPLNF2oxupe7WMfWErpLnKFqBLcCV6YXt9vKdwtHh8PKvQ/exec", {
             params: data,
           })
           .then(() => {
@@ -536,11 +577,12 @@ export default {
           reality_end_time: this.editForm.reality_end_time,
           days: this.editForm.days,
           commit: this.editForm.commit,
+          versions: this.editForm.versions,
           created_at: formattedDate,
           updated_at: formattedDate,
         };
         axios
-          .get("https://script.google.com/macros/s/AKfycbzmf2_Tay7hdJKGJLJ9Tuk5eoZ2guseoKrEXNe_FYWlqqhB66OiE_6IVWiFi28HuI9a/exec", {
+          .get("https://script.google.com/macros/s/AKfycbwrlrukf9c944pjr7eaCNPLNF2oxupe7WMfWErpLnKFqBLcCV6YXt9vKdwtHh8PKvQ/exec", {
             params: data,
           })
           .then(() => {
@@ -570,6 +612,7 @@ export default {
                     reality_end_time: "",
                     days: "0",
                     commit: "",
+                    versions: "",
                     created_at: "",
                     updated_at: "",
                   };
@@ -617,6 +660,7 @@ export default {
           reality_end_time: this.editForm.reality_end_time,
           commit: this.editForm.commit,
           days: this.editForm.days,
+          versions: this.editForm.versions,
           updated_at: formattedDate,
         };
         axios
@@ -707,6 +751,16 @@ export default {
 
       this.editForm.days = totalDays;
     },
+
+    // 搜尋高光
+    showDate(val) {
+      val = val + "";
+      if (val.indexOf(this.search.keyword) !== -1 && this.search.keyword !== "") {
+        return val.replace(this.search.keyword, '<span style="color: #000; background: gold">' + this.search.keyword + "</span>");
+      } else {
+        return val;
+      }
+    },
   },
   watch: {
     "editForm.start_time": "calculateDays",
@@ -730,12 +784,12 @@ export default {
       const search10 = this.search.reality_end_time;
       const search11 = this.search.updated_at;
       const search12 = this.search.commit;
-      const search = this.search.keyword;
+      const searchKeyword = this.search.keyword;
 
       return this.dataList.filter((data) => {
-        if (search) {
+        if (searchKeyword) {
           return Object.keys(data).some(function (key) {
-            return String(data[key]).toLowerCase().indexOf(search) > -1;
+            return String(data[key]).toLowerCase().indexOf(searchKeyword) > -1;
           });
         }
         if (search1) {
