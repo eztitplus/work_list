@@ -1,11 +1,11 @@
 <template>
   <loading-page :bar-hide="false" v-if="loading" :background-color="'#ffffff99'"></loading-page>
-  <div class="flex flex-col space-y-4 w-full py-10 px-10 absolute top-[60px] overflow-scroll">
+  <div class="flex flex-col space-y-4 w-full py-10 px-10 absolute top-[60px] overflow-scroll mode-bg">
     <div class="flex space-x-5">
-      <p class="text-2xl flex-1 text-left">工作排程表</p>
+      <p class="text-2xl flex-1 text-left mode-text">工作排程表</p>
       <a-button type="primary" @click="addForm">新增</a-button>
     </div>
-    <div class="flex flex-col space-y-5 p-4 rounded-xl bg-white items-center shadow-lg">
+    <div class="flex flex-col space-y-5 p-4 rounded-xl mode-white-bg items-center shadow-lg">
       <div class="flex space-x-5 w-full">
         <a-input v-model="search.keyword" placeholder="請輸入關鍵字" />
         <a-button v-if="searchMore === false" @click="searchMore = !searchMore">更多</a-button>
@@ -14,31 +14,31 @@
       </div>
       <div v-if="searchMore" class="grid gap-x-8 gap-y-4 grid-cols-3 w-full">
         <div class="flex items-center space-x-4 w-full">
-          <p class="min-w-[90px] max-w-[90px] text-left">類型</p>
+          <p class="min-w-[90px] max-w-[90px] mode-text text-left">類型</p>
           <a-select clearable filterable v-model="search.type" placeholder="請選擇">
             <a-option v-for="item in typeOptions" :key="item.value" :label="item.label" :value="item.value" />
           </a-select>
         </div>
         <div class="flex items-center space-x-4 w-full">
-          <p class="min-w-[90px] max-w-[90px] text-left">執行狀態</p>
+          <p class="min-w-[90px] max-w-[90px] mode-text text-left">執行狀態</p>
           <a-select clearable filterable v-model="search.status" placeholder="請選擇">
             <a-option v-for="item in statusOptions" :key="item.value" :label="item.label" :value="item.value" />
           </a-select>
         </div>
         <div class="flex items-center space-x-4 w-full">
-          <p class="min-w-[90px] max-w-[90px] text-left">指派日期</p>
+          <p class="min-w-[90px] max-w-[90px] mode-text text-left">指派日期</p>
           <a-range-picker v-model="search.assign_time" class="w-full" />
         </div>
         <div class="flex items-center space-x-4 w-full">
-          <p class="min-w-[90px] max-w-[90px] text-left">開始日期</p>
+          <p class="min-w-[90px] max-w-[90px] mode-text text-left">開始日期</p>
           <a-range-picker v-model="search.start_time" class="w-full" />
         </div>
         <div class="flex items-center space-x-4 w-full">
-          <p class="min-w-[90px] max-w-[90px] text-left">預計完成日期</p>
+          <p class="min-w-[90px] max-w-[90px] mode-text text-left">預計完成日期</p>
           <a-range-picker v-model="search.end_time" class="w-full" />
         </div>
         <div class="flex items-center space-x-4 w-full">
-          <p class="min-w-[90px] max-w-[90px] text-left">實際完成日期</p>
+          <p class="min-w-[90px] max-w-[90px] mode-text text-left">實際完成日期</p>
           <a-range-picker v-model="search.reality_end_time" class="w-full" />
         </div>
       </div>
@@ -78,8 +78,8 @@
         </a-form-item>
       </a-form>-->
     </div>
-    <div class="p-4 rounded-xl bg-white shadow-lg" style="height: calc(100vh - 265px)">
-      <el-table :data="tables" class="w-full" :height="`calc(100vh - 290px)`">
+    <div class="p-4 rounded-xl mode-white-bg shadow-lg" style="height: calc(100vh - 265px)">
+      <el-table :data="tables" class="w-full" :height="`calc(100vh - 290px)`" border>
         <el-table-column sortable fixed type="index" label="序" width="50" align="center"></el-table-column>
         <el-table-column sortable fixed prop="user" label="姓名" width="100" align="center">
           <!--<el-table-column prop="user" width="150" align="center">
@@ -113,7 +113,7 @@
             <span v-html="showDate(scope.row.subitems)"></span>
           </template>
         </el-table-column>
-        <el-table-column sortable prop="commit" label="說明" width="250" align="left">
+        <el-table-column sortable prop="commit" label="說明" width="350" align="left">
           <!--<el-table-column prop="commit" width="250" align="left">
             <template #header>
               <el-input placeholder="關鍵字" v-model="search.commit"></el-input>
@@ -135,7 +135,7 @@
             <span v-html="showDate(scope.row.type)"></span>
           </template>
         </el-table-column>
-        <el-table-column sortable prop="bug_number" label="禪道單號" width="150" align="center">
+        <el-table-column sortable prop="bug_number" label="禪道單號" width="120" align="center">
           <!--<el-table-column prop="bug_number" width="150" align="center">
             <template #header>
               <el-input placeholder="關鍵字" v-model="search.bug_number"></el-input>
@@ -148,7 +148,7 @@
             <a-button type="text" @click="goPage(scope.$index, scope.row)" v-html="showDate(scope.row.bug_number)"></a-button>
           </template>
         </el-table-column>
-        <el-table-column sortable prop="status" label="執行狀態" width="150" align="center">
+        <el-table-column sortable prop="status" label="執行狀態" width="120" align="center">
           <!--<el-table-column prop="status" width="150" align="center">
             <template #header>
               <el-select clearable filterable v-model="search.status" class="m-2" placeholder="請選擇" size="large">
@@ -169,7 +169,7 @@
             <a-tag v-if="scope.row.status === '暫停'" color="purple" v-html="showDate(scope.row.status)"></a-tag>
           </template>
         </el-table-column>
-        <el-table-column sortable prop="assign_time" label="指派日期" width="150" align="center">
+        <el-table-column sortable prop="assign_time" label="指派日期" width="120" align="center">
           <!--<el-table-column prop="assign_time" width="280" align="center">
             <template #header>
               <el-date-picker v-model="search.assign_time" class="w-[250px]" type="daterange" range-separator="到" start-placeholder="開始日期" end-placeholder="結束日期" />
@@ -180,7 +180,7 @@
             <span v-html="showDate(scope.row.assign_time)"></span>
           </template>
         </el-table-column>
-        <el-table-column sortable prop="start_time" label="開始日期" width="150" align="center">
+        <el-table-column sortable prop="start_time" label="開始日期" width="120" align="center">
           <!--<el-table-column prop="start_time" width="280" align="center">
             <template #header>
               <el-date-picker v-model="search.start_time" class="w-[250px]" type="daterange" range-separator="到" start-placeholder="開始日期" end-placeholder="結束日期" />
@@ -190,7 +190,7 @@
             <span v-html="showDate(scope.row.start_time)"></span>
           </template>
         </el-table-column>
-        <el-table-column sortable prop="end_time" label="預計完成日期" width="150" align="center">
+        <el-table-column sortable prop="end_time" label="預計完成日期" width="140" align="center">
           <!--<el-table-column prop="end_time" width="280" align="center">
             <template #header>
               <el-date-picker v-model="search.end_time" class="w-[250px]" type="daterange" range-separator="到" start-placeholder="開始日期" end-placeholder="結束日期" />
@@ -200,7 +200,7 @@
             <span v-html="showDate(scope.row.end_time)"></span>
           </template>
         </el-table-column>
-        <el-table-column sortable prop="reality_end_time" label="實際完成日期" width="150" align="center">
+        <el-table-column sortable prop="reality_end_time" label="實際完成日期" width="140" align="center">
           <!--<el-table-column prop="reality_end_time" width="280" align="center">
             <template #header>
               <el-date-picker v-model="search.reality_end_time" class="w-[250px]" type="daterange" range-separator="到" start-placeholder="開始日期" end-placeholder="結束日期" />
@@ -219,7 +219,7 @@
             <span v-html="showDate(scope.row.versions)"></span>
           </template>
         </el-table-column>
-        <el-table-column sortable prop="days" label="執行天數" width="150" align="center" />
+        <el-table-column sortable prop="days" label="執行天數" width="120" align="center" />
         <!--<el-table-column sortable prop="updated_at" label="最後編輯時間" width="200" align="center">
           <el-table-column prop="updated_at" width="280" align="center">
             <template #header>
@@ -236,8 +236,8 @@
     </div>
     <a-modal v-model:visible="editDialog" draggable>
       <template #title>
-        <p v-if="dialogTitle === 0" class="flex-1">新增排程</p>
-        <p v-if="dialogTitle === 1" class="flex-1">編輯排程</p>
+        <p v-if="dialogTitle === 0" class="flex-1 mode-text">新增排程</p>
+        <p v-if="dialogTitle === 1" class="flex-1 mode-text">編輯排程</p>
       </template>
       <a-form ref="formRef" :model="editForm" auto-label-width>
         <p v-if="dialogTitle === 1" class="text-sm mb-5 text-center">最後修改時間：{{ editForm.updated_at }}</p>
@@ -299,10 +299,10 @@
           <a-input v-model="editForm.versions" placeholder="請輸入內容" />
         </a-form-item>
         <div class="h-[32px] flex mb-4">
-          <p class="w-[102px] text-right mr-[16px] text-[#415969]">執行天數</p>
+          <p class="w-[102px] text-right mr-[16px] mode-text">執行天數</p>
           <div class="flex space-x-2">
-            <p>共 {{ editForm.days }} 天</p>
-            <p class="text-gray-400">(不含六日)</p>
+            <p class="mode-text">共 {{ editForm.days }} 天</p>
+            <p class="text-gray-400 mode-text">(不含六日)</p>
           </div>
         </div>
         <a-form-item label="說明">
@@ -329,8 +329,15 @@ import loadingPage from "@/components/loadingPage";
 export default {
   name: "HomeView",
   components: { loadingPage },
+  props: {
+    theme: {
+      type: String,
+      default: "",
+    },
+  },
   data() {
     return {
+      modeTheme: this.theme,
       loading: false,
       dataList: [], //表格
 
@@ -763,6 +770,14 @@ export default {
     },
   },
   watch: {
+    /*modeTheme: function (newVal) {
+      // 監聽
+      if (newVal === "dark") {
+        document.body.classList.add("dark");
+      } else {
+        document.body.classList.remove("dark");
+      }
+    },*/
     "editForm.start_time": "calculateDays",
     "editForm.end_time": "calculateDays",
     "editForm.reality_end_time": "calculateDays",
@@ -920,9 +935,9 @@ export default {
 .el-table thead.is-group th.el-table__cell {
   background: #f2f3f5 !important;
 }
-.el-table th.el-table__cell.is-sortable,
+/*.el-table th.el-table__cell.is-sortable,
 .el-table__header-wrapper tr th.el-table-fixed-column--left,
 .el-table__header-wrapper tr th.el-table-fixed-column--right {
   background: #f2f3f5 !important;
-}
+}*/
 </style>
