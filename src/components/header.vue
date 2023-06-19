@@ -249,6 +249,17 @@ export default {
   border-bottom: 1px solid var(--current-line-2-color) !important;
 }
 
+.el-table--border .el-table__cell {
+  border-right: 1px solid var(--current-line-2-color) !important;
+}
+
+.el-table--border .el-table__inner-wrapper::after,
+.el-table--border::after,
+.el-table--border::before,
+.el-table__inner-wrapper::before,
+.el-table__border-left-patch {
+  background-color: var(--current-line-2-color) !important;
+}
 /*.arco-btn-secondary,
 .arco-btn-secondary[type="button"],
 .arco-btn-secondary[type="submit"] {
