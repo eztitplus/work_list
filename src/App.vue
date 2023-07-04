@@ -1,9 +1,9 @@
 <template>
   <loading-page :progress="progress"></loading-page>
   <div class="hiddens relative w-screen items-center justify-center" :class="{ flex: !loadStatus }">
-    <header-page @mode-change="changMode"></header-page>
+    <header-page @mode-change="changMode" @user-change="userChange"></header-page>
     <a-config-provider :locale="zhTW">
-      <router-view :loading="loadStatus" :theme="theme" class="mode-bg" />
+      <router-view :loading="loadStatus" :theme="theme" :userSelect="userSelect" class="mode-bg" />
     </a-config-provider>
   </div>
 </template>
@@ -30,6 +30,10 @@ export default {
     const theme = ref("");
     const changMode = (value) => {
       theme.value = value;
+    };
+    const userSelect = ref("");
+    const userChange = (value) => {
+      userSelect.value = value;
     };
 
     const countTo100 = () => {
@@ -60,6 +64,8 @@ export default {
       progress,
       theme,
       changMode,
+      userSelect,
+      userChange,
     };
   },
 };

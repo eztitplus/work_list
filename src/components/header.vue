@@ -5,6 +5,9 @@
       <img v-if="this.modeStatus === true" class="h-[35px] cursor-pointer" src="../assets/LOGO/EZPLUS-textW.svg" alt="億集科技" @click="this.$router.push({ path: '/' })" />
       <img v-else class="h-[35px] cursor-pointer" src="../assets/LOGO/EZPLUS_Black.svg" alt="億集科技" @click="this.$router.push({ path: '/' })" />
       <div class="flex flex-1 justify-end">
+        <!--<a-select clearable filterable v-model="userSelect" placeholder="請選擇" class="w-[220px]">
+          <a-option v-for="item in userList" :key="item.id" :label="item.name" :value="item.name" @click="userChange" />
+        </a-select>-->
         <div v-if="this.modeStatus === true" class="mode-text cursor-pointer rounded border border-transparent px-2 py-1 text-lg hover:border-[#165DFF] items-center flex" @click="ModeLight">
           <MoonIcon class="mode-text h-[20px] w-[20px] text-right" />
         </div>
@@ -20,6 +23,7 @@
 <script>
 import { SunIcon } from "@heroicons/vue/24/solid";
 import { MoonIcon } from "@heroicons/vue/24/solid";
+import axios from "axios";
 export default {
   name: "headerPage",
   components: { SunIcon, MoonIcon },
@@ -27,6 +31,8 @@ export default {
     return {
       modeStatus: true,
       themeMode: "light",
+      userList: [],
+      userSelect: "",
     };
   },
   watch: {
@@ -35,11 +41,13 @@ export default {
       if (value === false) {
         this.themeMode = "light";
         this.$emit("mode-change", this.themeMode);
-        window.document.documentElement.setAttribute("data-theme", "light");
+        window.document.documentElement.setAttribute("class", "light");
+        window.document.body.setAttribute("arco-theme", "light");
       } else {
         this.themeMode = "dark";
         this.$emit("mode-change", this.themeMode);
-        window.document.documentElement.setAttribute("data-theme", "dark");
+        window.document.documentElement.setAttribute("class", "dark");
+        window.document.body.setAttribute("arco-theme", "dark");
       }
     },
   },
@@ -60,8 +68,32 @@ export default {
       this.themeMode = "dark";
       this.$emit("mode-change", this.themeMode);
     },
+
+    userChange() {
+      this.$emit("user-change", this.userSelect);
+    },
+
+    getUserAPI() {
+      function getAPI() {
+        return axios.get("https://sheets.googleapis.com/v4/spreadsheets/1XFUzU9uINCLrKhVd7YKg1CZ81dDtaDHyJ5pqeG5nwxI/values/user?alt=json&key=AIzaSyBfxlcGiftVBhSljybwPGMHhofAvn0Nk04");
+      }
+      Promise.all([getAPI()]).then((responses) => {
+        const rawData = responses[0].data.values;
+        const headers = rawData[0];
+        const data = rawData.slice(1);
+        this.userList = data.map((row) => {
+          const obj = {};
+          headers.forEach((header, index) => {
+            obj[header] = row[index];
+          });
+          return obj;
+        });
+      });
+    },
   },
   mounted() {
+    this.getUserAPI();
+
     const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches;
     this.modeStatus = !prefersDark;
 
@@ -71,12 +103,14 @@ export default {
       this.modeStatus = savedModeStatus === "false";
       this.themeMode = "light";
       this.$emit("mode-change", this.themeMode);
-      window.document.documentElement.setAttribute("data-theme", "light");
+      window.document.documentElement.setAttribute("class", "light");
+      window.document.body.setAttribute("arco-theme", "light");
     } else {
       this.modeStatus = savedModeStatus === "true";
       this.themeMode = "dark";
       this.$emit("mode-change", this.themeMode);
-      window.document.documentElement.setAttribute("data-theme", "dark");
+      window.document.documentElement.setAttribute("class", "dark");
+      window.document.body.setAttribute("arco-theme", "dark");
     }
   },
 };
@@ -144,40 +178,28 @@ export default {
   }
 }
 
-:root[data-theme="dark"] {
+:root[class="dark"] {
   /* 模式變量切換：預設light模式 */
   --current-primary-color: var(--dark-primary-color);
-  --current-line-color: var(--dark-line-color);
-  --current-line-2-color: var(--dark-line-2-color);
   --current-white-background-color: var(--dark-white-background-color);
   --current-background-color: var(--dark-background-color);
-  --current-input-bg-color: var(--dark-input-bg-color);
 
   /* 深色主题 */
   --dark-primary-color: #fff;
-  --dark-line-color: #000;
-  --dark-line-2-color: #363637;
   --dark-white-background-color: #232324;
   --dark-background-color: #0e1116;
-  --dark-input-bg-color: #343435;
 }
 
-:root[data-theme="light"] {
+:root[class="light"] {
   /* 模式變量切換：預設light模式 */
   --current-primary-color: var(--light-primary-color);
-  --current-line-color: var(--light-line-color);
-  --current-line-2-color: var(--light-line-2-color);
   --current-white-background-color: var(--light-white-background-color);
   --current-background-color: var(--light-background-color);
-  --current-input-bg-color: var(--light-input-bg-color);
 
   /* 淺色主題 */
   --light-primary-color: #000;
-  --light-line-color: #e5e6eb;
-  --light-line-2-color: #ebeef5;
   --light-white-background-color: #fff;
   --light-background-color: #f5f7fa;
-  --light-input-bg-color: #f2f3f5;
 }
 
 .header-wrap {
@@ -189,9 +211,7 @@ export default {
   box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
 }
 
-.mode-text,
-.arco-form-item-label-col > .arco-form-item-label,
-.arco-picker input {
+.mode-text {
   color: var(--current-primary-color) !important;
 }
 
@@ -207,63 +227,5 @@ export default {
 .el-table__header-wrapper tr th.el-table-fixed-column--left,
 .el-table__header-wrapper tr th.el-table-fixed-column--right {
   background: var(--current-background-color) !important;
-  color: var(--current-primary-color) !important;
 }
-
-.arco-input-wrapper,
-.arco-picker,
-.arco-textarea-wrapper,
-.arco-select-view-single,
-.arco-select-dropdown,
-.arco-select-dropdown .arco-select-option {
-  background: var(--current-input-bg-color) !important;
-  color: var(--current-primary-color) !important;
-}
-
-.arco-select-popup .arco-select-option-hover,
-.arco-select-dropdown .arco-select-option-active {
-  background: var(--current-white-background-color) !important;
-}
-
-.el-table__empty-block,
-.el-scrollbar__wrap,
-.el-table__row,
-.el-table__body-wrapper tr td.el-table-fixed-column--left,
-.el-table__body-wrapper tr td.el-table-fixed-column--right,
-.el-table__body tr.hover-row > td.el-table__cell,
-.arco-modal {
-  background: var(--current-white-background-color) !important;
-  color: var(--current-primary-color) !important;
-}
-
-.arco-modal-header {
-  border-bottom: 1px solid var(--current-line-color) !important;
-}
-
-.arco-modal-footer {
-  border-top: 1px solid var(--current-line-color) !important;
-}
-
-.el-table td.el-table__cell,
-.el-table th.el-table__cell.is-leaf {
-  border-bottom: 1px solid var(--current-line-2-color) !important;
-}
-
-.el-table--border .el-table__cell {
-  border-right: 1px solid var(--current-line-2-color) !important;
-}
-
-.el-table--border .el-table__inner-wrapper::after,
-.el-table--border::after,
-.el-table--border::before,
-.el-table__inner-wrapper::before,
-.el-table__border-left-patch {
-  background-color: var(--current-line-2-color) !important;
-}
-/*.arco-btn-secondary,
-.arco-btn-secondary[type="button"],
-.arco-btn-secondary[type="submit"] {
-  background: var(--current-input-bg-color) !important;
-  color: var(--current-primary-color) !important;
-}*/
 </style>
